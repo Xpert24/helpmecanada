@@ -1,0 +1,300 @@
+@model HelpMeCanada.Models.ApplicationUser
+@{
+    ViewBag.Title = "MultiViewIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section ScriptsOrCss
+{
+    <script src="~/Content/DataTable/js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="~/Content/DataTable/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+    <link href="~/Content/DataTable/plugins/dataTables.bootstrap.css" rel="stylesheet" />
+    <script src="~/Content/DataTable/js/plugins/dataTables/jquery.dataTable.minNew.js"></script>
+    <script type="text/javascript" src="~/Content/HtmlExprt/tableExport.js"></script>
+    <script type="text/javascript" src="~/Content/HtmlExprt/jquery.base64.js"></script>
+    <script type="text/javascript" src="~/Content/HtmlExprt/html2canvas.js"></script>
+    <script type="text/javascript" src="~/Content/HtmlExprt/jspdf/libs/sprintf.js"></script>
+    <script type="text/javascript" src="~/Content/HtmlExprt/jspdf/jspdf.js"></script>
+    <script type="text/javascript" src="~/Content/HtmlExprt/jspdf/libs/base64.js"></script>
+    <link href="~/Content/splitter/splitter.css" rel="stylesheet" />
+    <script src="~/Content/splitter/Splitter.js"></script>
+    <script src="~/Content/ckEditor/ckeditor.js"></script>
+    <link href="~/Content/ckEditor/samples/sample.css" rel="stylesheet" />
+    <script src="~/Content/tabs/Jquery-ui.js"></script>
+    <link href="~/Content/tabs/JqueryUi.css" rel="stylesheet" />
+    <script>
+        $(function () {
+            var tabs = $("#tabs").tabs();
+            tabs.find(".ui-tabs-nav").sortable({
+                axis: "x",
+                stop: function () {
+                    tabs.tabs("refresh");
+                }
+            });
+
+            $("#dialog").dialog({
+                autoOpen: false,
+                show: {
+                    effect: "blind",
+                    duration: 1000
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 1000
+                }
+            });
+            $("#opener").click(function () {
+                $("#dialog").dialog("open");
+            });
+
+        });
+    </script>
+
+    <style>
+        table {
+            width: 100% !important;
+        }
+    </style>
+}
+ 
+<section class="content-header">
+    <h1>
+        Multi Edit View
+    </h1>
+</section>
+<section class="content">
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-solid box-primary">
+
+
+                <div id="widget" class="areaOfsplitter">
+                    
+                    <div > 
+                             <div id="tabs">
+                                <ul>
+                                    <li><a href="#EditThis">Edit</a></li>
+                                    <li><a href="#RoleUser">Role User</a></li>
+<li><a href="#MenuPermission">Menu Permission</a></li>
+<li><a href="#Item">Item</a></li>
+<li><a href="#Question">Question</a></li>
+
+                                </ul>
+                                <div id="EditThis">
+                                   @using (Html.BeginForm("MultiViewIndex", "ApplicationUser", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                if (ViewBag.IsWorking == 1)
+                                {
+                                    <section class="content">
+                                        <!-- Small boxes (Stat box) -->
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="box box-solid box-primary">
+                                                    <div class="box-header">
+                                                        <h3 class="box-title">Edit ApplicationUser Info</h3>
+                                                    </div><!-- /.box-header -->
+                                                    <!-- form start -->
+                                                    <div role="form">
+                                                        <div class="box-body">
+                                                            <div class="alert alert-danger alert-dismissable" style="display:@(this.ViewData.ModelState.IsValid ? "none" : "")">
+                                                                <i class="fa fa-ban"></i>
+                                                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+
+                                                                @foreach (var key in this.ViewData.ModelState.Keys)
+                                                                {
+                                                                    foreach (var err in this.ViewData.ModelState[key].Errors)
+                                                                    {
+                                                                        <b>Alert! </b> @err.ErrorMessage
+                                                                        <br />
+                                                                    }
+                                                                }
+                                                            </div>
+
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Username, new { @class = "" })
+                                @Html.EditorFor(model => model.Username) @Html.ValidationMessageFor(model => model.Username)
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Password, new { @class = "" })
+                                @Html.EditorFor(model => model.Password) @Html.ValidationMessageFor(model => model.Password)
+                            </div>
+                                                             
+
+
+                                                        </div><!-- /.box-body -->
+                                                        <div class="box-footer">
+                                                            <input type="submit" value="Save And Continue" class="btn btn-primary" />
+                                                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                }
+                            }
+                                </div>
+                                 
+                                <div id="RoleUser" style="overflow:auto !important;"> 
+<div class="box box-solid box-primary"><div class="box-body">
+@Html.StarkAjaxLink("Create New","/RoleUser/Create","StarkRoleUser")
+</div> </div>
+<div class="box box-solid box-primary"> <div class="box-body">
+<table id="tbRoleUser" class="table table-striped table-bordered">
+<thead><tr> 
+<th></th> 
+                                                <th> S.No </th>                                                <th> Role </th>                                                <th> User </th>                                            </tr>                                        </thead>                                        <tbody> </tbody>                                    </table></div></div>                                </div>
+                                <div id="MenuPermission" style="overflow:auto !important;"> 
+<div class="box box-solid box-primary"><div class="box-body">
+@Html.StarkAjaxLink("Create New","/MenuPermission/Create","StarkMenuPermission")
+</div> </div>
+<div class="box box-solid box-primary"> <div class="box-body">
+<table id="tbMenuPermission" class="table table-striped table-bordered">
+<thead><tr> 
+<th></th> 
+                                                <th> S.No </th>                                                <th> Menu </th>                                                <th> Role </th>                                                <th> User </th>                                            </tr>                                        </thead>                                        <tbody> </tbody>                                    </table></div></div>                                </div>
+                                <div id="Item" style="overflow:auto !important;"> 
+<div class="box box-solid box-primary"><div class="box-body">
+@Html.StarkAjaxLink("Create New","/Item/Create","StarkItem")
+</div> </div>
+<div class="box box-solid box-primary"> <div class="box-body">
+<table id="tbItem" class="table table-striped table-bordered">
+<thead><tr> 
+<th></th> 
+                                                <th> S.No </th>                                                <th> Title </th>                                                <th> Description </th>                                                <th> Item Category </th>                                                <th> Item Type </th>                                                <th> Added By </th>                                                <th> Date Added </th>                                                <th> Modified By </th>                                                <th> Date Modied </th>                                                <th> Deal Closed </th>                                                <th> Email </th>                                                <th> Phone </th>                                            </tr>                                        </thead>                                        <tbody> </tbody>                                    </table></div></div>                                </div>
+                                <div id="Question" style="overflow:auto !important;"> 
+<div class="box box-solid box-primary"><div class="box-body">
+@Html.StarkAjaxLink("Create New","/Question/Create","StarkQuestion")
+</div> </div>
+<div class="box box-solid box-primary"> <div class="box-body">
+<table id="tbQuestion" class="table table-striped table-bordered">
+<thead><tr> 
+<th></th> 
+                                                <th> S.No </th>                                                <th> Title </th>                                                <th> Desciption </th>                                                <th> User </th>                                                <th> Question Category </th>                                                <th> Added By </th>                                                <th> Date Added </th>                                                <th> Modified By </th>                                                <th> Date Modied </th>                                            </tr>                                        </thead>                                        <tbody> </tbody>                                    </table></div></div>                                </div>
+
+                            </div>
+                              
+                         
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+  
+ <script type="text/javascript">
+
+        $(document).ready(function () {
+            var oTableRoleUser = "";
+            var ControlerNameRoleUser = "@Url.Content("~/RoleUser")";
+            // debugger;
+            oTableRoleUser = $("#tbRoleUser").dataTable({
+                "bRetrieve": true,
+                "bProcessing": true,
+                "sAjaxSource": "@Url.Content("~/RoleUser/GetGrid")",
+                "aoColumns": [
+                             
+                {
+                                 "mRender": function (oObj, type, row) {
+                                     var buttons = "<a class=\"btn btn-social-icon btn-bitbucket\" href=" + ControlerNameRoleUser + "/MultiViewIndex/" + row[0] + "><i class=\"fa fa-edit\"></i></a>"
+                        buttons += "<a class=\"btn btn-social-icon btn-dropbox\" href=" + ControlerNameRoleUser + "/Details/" + row[0] + " data-ajax-update=\"#SkDetails\" data-ajax-success=\"openModalDialog('SkDetails', 'Details')\" data-ajax-mode=\"replace\" data-ajax-method=\"GET\" data-ajax-failure=\"clearModalDialog('SkDetails');alert('Ajax call failed')\" data-ajax-begin=\"prepareModalDialog('SkDetails')\" data-ajax=\"true\"><i class=\"fa fa-info\"></i></a>";
+                        buttons += "<a class=\"btn btn-social-icon btn-google-plus\" href=" + ControlerNameRoleUser + "/Delete/" + row[0] + " data-ajax-update=\"#SkDelete\" data-ajax-success=\"openModalDialog('SkDelete', 'Delete')\" data-ajax-mode=\"replace\" data-ajax-method=\"GET\" data-ajax-failure=\"clearModalDialog('SkDelete');alert('Ajax call failed')\" data-ajax-begin=\"prepareModalDialog('SkDelete')\" data-ajax=\"true\"><i class=\"fa fa-bitbucket\"></i></a>";
+                         
+                        return buttons;
+                                 } 
+                
+        } ,{},{},{}
+        ]
+
+        });
+         
+        });
+    </script> <script type="text/javascript">
+
+        $(document).ready(function () {
+            var oTableMenuPermission = "";
+            var ControlerNameMenuPermission = "@Url.Content("~/MenuPermission")";
+            // debugger;
+            oTableMenuPermission = $("#tbMenuPermission").dataTable({
+                "bRetrieve": true,
+                "bProcessing": true,
+                "sAjaxSource": "@Url.Content("~/MenuPermission/GetGrid")",
+                "aoColumns": [
+                             
+                {
+                                 "mRender": function (oObj, type, row) {
+                                     var buttons = "<a class=\"btn btn-social-icon btn-bitbucket\" href=" + ControlerNameMenuPermission + "/MultiViewIndex/" + row[0] + "><i class=\"fa fa-edit\"></i></a>"
+                        buttons += "<a class=\"btn btn-social-icon btn-dropbox\" href=" + ControlerNameMenuPermission + "/Details/" + row[0] + " data-ajax-update=\"#SkDetails\" data-ajax-success=\"openModalDialog('SkDetails', 'Details')\" data-ajax-mode=\"replace\" data-ajax-method=\"GET\" data-ajax-failure=\"clearModalDialog('SkDetails');alert('Ajax call failed')\" data-ajax-begin=\"prepareModalDialog('SkDetails')\" data-ajax=\"true\"><i class=\"fa fa-info\"></i></a>";
+                        buttons += "<a class=\"btn btn-social-icon btn-google-plus\" href=" + ControlerNameMenuPermission + "/Delete/" + row[0] + " data-ajax-update=\"#SkDelete\" data-ajax-success=\"openModalDialog('SkDelete', 'Delete')\" data-ajax-mode=\"replace\" data-ajax-method=\"GET\" data-ajax-failure=\"clearModalDialog('SkDelete');alert('Ajax call failed')\" data-ajax-begin=\"prepareModalDialog('SkDelete')\" data-ajax=\"true\"><i class=\"fa fa-bitbucket\"></i></a>";
+                         
+                        return buttons;
+                                 } 
+                
+        } ,{},{},{},{}
+        ]
+
+        });
+         
+        });
+    </script> <script type="text/javascript">
+
+        $(document).ready(function () {
+            var oTableItem = "";
+            var ControlerNameItem = "@Url.Content("~/Item")";
+            // debugger;
+            oTableItem = $("#tbItem").dataTable({
+                "bRetrieve": true,
+                "bProcessing": true,
+                "sAjaxSource": "@Url.Content("~/Item/GetGrid")",
+                "aoColumns": [
+                             
+                {
+                                 "mRender": function (oObj, type, row) {
+                                     var buttons = "<a class=\"btn btn-social-icon btn-bitbucket\" href=" + ControlerNameItem + "/MultiViewIndex/" + row[0] + "><i class=\"fa fa-edit\"></i></a>"
+                        buttons += "<a class=\"btn btn-social-icon btn-dropbox\" href=" + ControlerNameItem + "/Details/" + row[0] + " data-ajax-update=\"#SkDetails\" data-ajax-success=\"openModalDialog('SkDetails', 'Details')\" data-ajax-mode=\"replace\" data-ajax-method=\"GET\" data-ajax-failure=\"clearModalDialog('SkDetails');alert('Ajax call failed')\" data-ajax-begin=\"prepareModalDialog('SkDetails')\" data-ajax=\"true\"><i class=\"fa fa-info\"></i></a>";
+                        buttons += "<a class=\"btn btn-social-icon btn-google-plus\" href=" + ControlerNameItem + "/Delete/" + row[0] + " data-ajax-update=\"#SkDelete\" data-ajax-success=\"openModalDialog('SkDelete', 'Delete')\" data-ajax-mode=\"replace\" data-ajax-method=\"GET\" data-ajax-failure=\"clearModalDialog('SkDelete');alert('Ajax call failed')\" data-ajax-begin=\"prepareModalDialog('SkDelete')\" data-ajax=\"true\"><i class=\"fa fa-bitbucket\"></i></a>";
+                         
+                        return buttons;
+                                 } 
+                
+        } ,{},{},{},{},{},{},{},{},{},{},{},{}
+        ]
+
+        });
+         
+        });
+    </script> <script type="text/javascript">
+
+        $(document).ready(function () {
+            var oTableQuestion = "";
+            var ControlerNameQuestion = "@Url.Content("~/Question")";
+            // debugger;
+            oTableQuestion = $("#tbQuestion").dataTable({
+                "bRetrieve": true,
+                "bProcessing": true,
+                "sAjaxSource": "@Url.Content("~/Question/GetGrid")",
+                "aoColumns": [
+                             
+                {
+                                 "mRender": function (oObj, type, row) {
+                                     var buttons = "<a class=\"btn btn-social-icon btn-bitbucket\" href=" + ControlerNameQuestion + "/MultiViewIndex/" + row[0] + "><i class=\"fa fa-edit\"></i></a>"
+                        buttons += "<a class=\"btn btn-social-icon btn-dropbox\" href=" + ControlerNameQuestion + "/Details/" + row[0] + " data-ajax-update=\"#SkDetails\" data-ajax-success=\"openModalDialog('SkDetails', 'Details')\" data-ajax-mode=\"replace\" data-ajax-method=\"GET\" data-ajax-failure=\"clearModalDialog('SkDetails');alert('Ajax call failed')\" data-ajax-begin=\"prepareModalDialog('SkDetails')\" data-ajax=\"true\"><i class=\"fa fa-info\"></i></a>";
+                        buttons += "<a class=\"btn btn-social-icon btn-google-plus\" href=" + ControlerNameQuestion + "/Delete/" + row[0] + " data-ajax-update=\"#SkDelete\" data-ajax-success=\"openModalDialog('SkDelete', 'Delete')\" data-ajax-mode=\"replace\" data-ajax-method=\"GET\" data-ajax-failure=\"clearModalDialog('SkDelete');alert('Ajax call failed')\" data-ajax-begin=\"prepareModalDialog('SkDelete')\" data-ajax=\"true\"><i class=\"fa fa-bitbucket\"></i></a>";
+                         
+                        return buttons;
+                                 } 
+                
+        } ,{},{},{},{},{},{},{},{},{}
+        ]
+
+        });
+         
+        });
+    </script>

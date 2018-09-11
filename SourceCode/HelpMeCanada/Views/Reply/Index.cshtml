@@ -1,0 +1,248 @@
+@model IEnumerable<HelpMeCanada.Models.Reply>
+
+    @{
+        ViewBag.Title = "Reply List";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+@section ScriptsOrCss
+{
+    <script src="~/Content/DataTable/js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="~/Content/DataTable/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+    <link href="~/Content/DataTable/plugins/dataTables.bootstrap.css" rel="stylesheet" />
+    <script src="~/Content/DataTable/js/plugins/dataTables/jquery.dataTable.minNew.js"></script>
+    <script type="text/javascript" src="~/Content/HtmlExprt/tableExport.js"></script>
+    <script type="text/javascript" src="~/Content/HtmlExprt/jquery.base64.js"></script>
+    <script type="text/javascript" src="~/Content/HtmlExprt/html2canvas.js"></script>
+    <script type="text/javascript" src="~/Content/HtmlExprt/jspdf/libs/sprintf.js"></script>
+    <script type="text/javascript" src="~/Content/HtmlExprt/jspdf/jspdf.js"></script>
+    <script type="text/javascript" src="~/Content/HtmlExprt/jspdf/libs/base64.js"></script>
+}
+    <section class="content-header">
+        <h1>
+            @ViewBag.Title
+            <small> Reply List</small>
+        </h1>
+    </section>
+
+    <section class="content">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-solid box-primary">
+
+                    <div class="box-body">
+                        <!-- Split button -->
+                        <div class="margin">
+
+                            <div class="btn-group">
+
+                                @Ajax.ModalDialogActionLink("Create", "Create", "Create ", "btn btn-dropbox")
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger btn-flat">Toggle Columns</button>
+                                <button type="button" class="btn btn-danger btn-flat dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+
+                                    <li><a class="toggle-vis" data-column="0">Actions</a></li>
+                                    <li><a class="toggle-vis" data-column="1">Id</a></li>
+                                    <li><a class="toggle-vis" data-column="2">Description</a></li>
+                                    <li><a class="toggle-vis" data-column="3">QuestionId</a></li>
+                                    <li><a class="toggle-vis" data-column="4">ParentId</a></li>
+                                    <li><a class="toggle-vis" data-column="5">IsHeplfull</a></li>
+
+                                </ul>
+                            </div>
+                            <div class="btn-group">
+
+
+                                <a class="btn btn-social btn-danger" onclick="$('#tbReply').tableExport({type:'pdf',escape:'false'});">
+                                    <img src='~/Content/HtmlExprt/icons/pdf.png' style="height:25px !important;margin:3px;"> Export to PDF
+                                </a>
+                                <a class="btn btn-social btn-success" onclick="$('#tbReply').tableExport({type:'excel',escape:'false'});">
+                                    <img src='~/Content/HtmlExprt/icons/xls.png' style="height:25px !important;margin:3px;" /> Export to Excel
+                                </a>
+
+                                <a class="btn btn-social btn-dropbox" onclick="$('#tbReply').tableExport({type:'word',escape:'false'});">
+                                    <img src='~/Content/HtmlExprt/icons/word.png' style="height:25px !important;margin:3px;" /> Export to Word
+                                </a>
+                                <a class="btn btn-social btn-github" onclick="$('#tbReply').tableExport({type:'csv',escape:'false'});">
+                                    <img src='~/Content/HtmlExprt/icons/csv.png' style="height:25px !important;margin:3px;" /> Export to CSV
+                                </a>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger btn-flat">Export to</button>
+                                <button type="button" class="btn btn-danger btn-flat dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#" onclick="$('#tbReply').tableExport({type:'powerpoint',escape:'false'});"> <img src='~/Content/HtmlExprt/icons/ppt.png' style="height:25px !important;margin:3px;"> PowerPoint</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#" onclick="$('#tbReply').tableExport({type:'json',escape:'false'});"> <img src='~/Content/HtmlExprt/icons/json.png' style="height:25px !important;margin:3px;"> JSON</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#" onclick="$('#tbReply').tableExport({type:'xml',escape:'false'});"> <img src='~/Content/HtmlExprt/icons/xml.png' style="height:25px !important;margin:3px;"> XML</a></li>
+                                    <li><a href="#" onclick="$('#tbReply').tableExport({type:'sql'});"> <img src='~/Content/HtmlExprt/icons/sql.png' style="height:25px !important;margin:3px;"> SQL</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#" onclick="$('#tbReply').tableExport({type:'txt',escape:'false'});"> <img src='~/Content/HtmlExprt/icons/txt.png' style="height:25px !important;margin:3px;"> TXT</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- flat split buttons -->
+                    </div><!-- /.box-body -->
+                </div>
+                <div class="box box-solid box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title">Role Records</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body table-responsive">
+
+                        <div class="margin">
+
+                            <div class="streaming-table">
+                                <span id="found" class="label label-info"></span>
+
+
+                                <table id="tbReply" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th> @Html.DisplayNameFor(model => model.Id) </th>
+                                            <th> @Html.DisplayNameFor(model => model.Description) </th>
+                                            <th> @Html.DisplayNameFor(model => model.QuestionId) </th>
+                                            <th> @Html.DisplayNameFor(model => model.ParentId) </th>
+                                            <th> @Html.DisplayNameFor(model => model.IsHeplfull) </th>
+
+ 
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+
+                                <div id="summary">
+                                    <div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-solid box-primary">
+
+                    <div class="box-body">
+                        <!-- Split button -->
+                        <div class="margin">
+
+                            <div class="btn-group">
+
+                                 @Ajax.ModalDialogActionLink("Create", "Create", "Create ", "btn btn-dropbox")
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger btn-flat">Toggle Columns</button>
+                                <button type="button" class="btn btn-danger btn-flat dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+
+                                    <li><a class="toggle-vis" data-column="0">Actions</a></li>
+                                    <li><a class="toggle-vis" data-column="1">Id</a></li>
+                                    <li><a class="toggle-vis" data-column="2">Description</a></li>
+                                    <li><a class="toggle-vis" data-column="3">QuestionId</a></li>
+                                    <li><a class="toggle-vis" data-column="4">ParentId</a></li>
+                                    <li><a class="toggle-vis" data-column="5">IsHeplfull</a></li>
+
+                                </ul>
+                            </div>
+                            <div class="btn-group">
+
+
+                                <a class="btn btn-social btn-danger" onclick="$('#tbReply').tableExport({type:'pdf',escape:'false'});">
+                                    <img src='~/Content/HtmlExprt/icons/pdf.png' style="height:25px !important;margin:3px;"> Export to PDF
+                                </a>
+                                <a class="btn btn-social btn-success" onclick="$('#tbReply').tableExport({type:'excel',escape:'false'});">
+                                    <img src='~/Content/HtmlExprt/icons/xls.png' style="height:25px !important;margin:3px;" /> Export to Excel
+                                </a>
+
+                                <a class="btn btn-social btn-dropbox" onclick="$('#tbReply').tableExport({type:'word',escape:'false'});">
+                                    <img src='~/Content/HtmlExprt/icons/word.png' style="height:25px !important;margin:3px;" /> Export to Word
+                                </a>
+                                <a class="btn btn-social btn-github" onclick="$('#tbReply').tableExport({type:'csv',escape:'false'});">
+                                    <img src='~/Content/HtmlExprt/icons/csv.png' style="height:25px !important;margin:3px;" /> Export to CSV
+                                </a>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger btn-flat">Export to</button>
+                                <button type="button" class="btn btn-danger btn-flat dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#" onclick="$('#tbReply').tableExport({type:'powerpoint',escape:'false'});"> <img src='~/Content/HtmlExprt/icons/ppt.png' style="height:25px !important;margin:3px;"> PowerPoint</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#" onclick="$('#tbReply').tableExport({type:'json',escape:'false'});"> <img src='~/Content/HtmlExprt/icons/json.png' style="height:25px !important;margin:3px;"> JSON</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#" onclick="$('#tbReply').tableExport({type:'xml',escape:'false'});"> <img src='~/Content/HtmlExprt/icons/xml.png' style="height:25px !important;margin:3px;"> XML</a></li>
+                                    <li><a href="#" onclick="$('#tbReply').tableExport({type:'sql'});"> <img src='~/Content/HtmlExprt/icons/sql.png' style="height:25px !important;margin:3px;"> SQL</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#" onclick="$('#tbReply').tableExport({type:'txt',escape:'false'});"> <img src='~/Content/HtmlExprt/icons/txt.png' style="height:25px !important;margin:3px;"> TXT</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- flat split buttons -->
+                    </div><!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+     <script type="text/javascript">
+
+        $(document).ready(function () {
+            var oTableReply = "";
+            var ControlerNameReply = "@Url.Content("~/Reply")";
+            // debugger;
+            oTableReply = $("#tbReply").dataTable({
+                "bRetrieve": true,
+                "bProcessing": true,
+                "sAjaxSource": "@Url.Content("~/Reply/GetGrid")",
+                "aoColumns": [
+                             
+                {
+                                 "mRender": function (oObj, type, row) {
+                                     
+var buttons = "<a class=\"btn btn-social-icon btn-bitbucket\" href=" + ControlerNameReply + "/MultiViewIndex/" + row[0] + "><i class=\"fa fa-edit\"></i></a>"
+                        buttons += "<a class=\"btn btn-social-icon btn-dropbox\" href=" + ControlerNameReply + "/Details/" + row[0] + " data-ajax-update=\"#SkDetails\" data-ajax-success=\"openModalDialog('SkDetails', 'Details')\" data-ajax-mode=\"replace\" data-ajax-method=\"GET\" data-ajax-failure=\"clearModalDialog('SkDetails');alert('Ajax call failed')\" data-ajax-begin=\"prepareModalDialog('SkDetails')\" data-ajax=\"true\"><i class=\"fa fa-info\"></i></a>";
+                        buttons += "<a class=\"btn btn-social-icon btn-google-plus\" href=" + ControlerNameReply + "/Delete/" + row[0] + " data-ajax-update=\"#SkDelete\" data-ajax-success=\"openModalDialog('SkDelete', 'Delete')\" data-ajax-mode=\"replace\" data-ajax-method=\"GET\" data-ajax-failure=\"clearModalDialog('SkDelete');alert('Ajax call failed')\" data-ajax-begin=\"prepareModalDialog('SkDelete')\" data-ajax=\"true\"><i class=\"fa fa-bitbucket\"></i></a>";
+                         
+                        return buttons;
+                                 } 
+                
+        } ,{}
+,{}
+,{    "mRender": function (oObj, type, row) {
+        return "<a href='/Question/' target='_blank' class='btn btn-tiny'  /> " + oObj + " </a>";
+     }
+},{}
+,{}
+
+
+        ]
+
+        });
+        var table = $('#tbReply').DataTable({});
+
+        $('a.toggle-vis').on('click', function (e) {
+            e.preventDefault();
+            var column = table.column($(this).attr('data-column'));
+            column.visible(!column.visible());
+        });
+        });
+    </script>
+

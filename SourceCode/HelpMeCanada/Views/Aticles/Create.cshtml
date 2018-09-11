@@ -1,0 +1,98 @@
+@model HelpMeCanada.Models.Aticles
+
+@{
+    ViewBag.Title = "Create";
+    if (Ajax.IsThisAjaxRequest())
+    {
+        Layout = null;
+    }
+}
+@section ScriptsOrCss{ 
+<script src="~/Content/ckEditor/ckeditor.js"></script>
+<link href="~/Content/ckEditor/samples/sample.css" rel="stylesheet" />
+}
+
+<section class="content-header">
+    <h1>
+        @ViewBag.Title
+        <small>Create</small>
+    </h1>
+</section>
+
+@using (Html.BeginForm("Create", "Aticles", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+          <!-- Main content -->
+    <section class="content">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-solid box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title">Fill Aticles Form</h3>
+                    </div><!-- /.box-header -->
+                    <!-- form start -->
+                    <div role="form">
+                        <div class="box-body">
+                            <div class="alert alert-danger alert-dismissable" style="display:@(this.ViewData.ModelState.IsValid ? "none" : "")">
+                                <i class="fa fa-ban"></i>
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+
+                                @foreach (var key in this.ViewData.ModelState.Keys)
+                                {
+                                    foreach (var err in this.ViewData.ModelState[key].Errors)
+                                    {
+                                        <b>Alert! </b> @err.ErrorMessage
+                                        <br />
+                                    }
+                                }
+                                @Html.ValidationSummary(true)
+                            </div>
+
+
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Title, new { @class = "" })
+                                @Html.EditorFor(model => model.Title) @Html.ValidationMessageFor(model => model.Title)
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Description, new { @class = "" })
+                                @Html.EditorFor(model => model.Description) @Html.ValidationMessageFor(model => model.Description)
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ArticleCategoryId, new { @class = "" })
+                                @Html.DropDownList("ArticleCategoryId"," -Select- ") @Html.ValidationMessageFor(model => model.ArticleCategoryId)
+                                &nbsp;&nbsp; <a data-ajax="true" data-ajax-begin="prepareModalDialog('AddMore')" data-ajax-failure="clearModalDialog('AddMore');alert('Ajax call failed')" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-success="openModalDialog('AddMore', 'Add')" data-ajax-update="#AddMore" href="~/ArticleCategory/Create">
+                                     <img src="~/Content/ModelPopup/Plus.png" />
+                                </a>
+                            </div>
+                            <div class="form-group">
+                                @Html.Hidden("AddedBy", Env.GetUserInfo("userid")) @Html.ValidationMessageFor(model => model.AddedBy)
+                            </div>
+                            <div class="form-group">
+                                @Html.Hidden("DateAdded", DateTime.Now) @Html.ValidationMessageFor(model => model.DateAdded)
+                            </div>
+                            <div class="form-group">
+                                @Html.Hidden("ModifiedBy", Env.GetUserInfo("userid")) @Html.ValidationMessageFor(model => model.ModifiedBy)
+                            </div>
+                            <div class="form-group">
+                                @Html.Hidden("DateModied", DateTime.Now) @Html.ValidationMessageFor(model => model.DateModied)
+                            </div>
+
+
+
+
+                        </div>
+                        <div class="box-footer">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+
+
